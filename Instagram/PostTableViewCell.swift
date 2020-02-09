@@ -16,6 +16,8 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var commentButton: UIButton!
+    @IBOutlet weak var commentLabel: UILabel!
     
     
     override func awakeFromNib() {
@@ -58,6 +60,14 @@ class PostTableViewCell: UITableViewCell {
         } else {
             let buttonImage = UIImage(named: "like_none")
             self.likeButton.setImage(buttonImage, for: .normal)
+        }
+        
+        //コメントの表示
+        if let comment = postData.comment {
+            self.commentLabel.text = "\(comment)"
+        } else {
+            self.commentLabel.text = ""
+            
         }
     }
 }

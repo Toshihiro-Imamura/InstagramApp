@@ -72,10 +72,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // セルを取得してデータを設定する
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PostTableViewCell
         cell.setPostData(postArray[indexPath.row])
-        
-        //セル内のボタンのアクションをソースコードで設定する
-        cell.likeButton.addTarget(self, action: #selector(handleButton(_:forEvent:)), for: .touchUpInside)
-        
+        // セル内のボタンのアクションをソースコードで設定する
+        cell.likeButton.addTarget(self, action:#selector(handleButton(_:forEvent:)), for: .touchUpInside)
+        cell.commentButton.addTarget(self, action:#selector(commentButton(_:forEvent:)), for: .touchUpInside)
         return cell
     }
     
@@ -83,7 +82,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @objc func handleButton(_ sender: UIButton, forEvent event: UIEvent){
         print("DEBUG_PRINT: likeボタンがタップされました")
         
-        //タップされたいセルのインデックスを求める
+        //タップされたセルのインデックスを求める
         let touch = event.allTouches?.first
         let point = touch!.location(in: self.tableView)
         let indexPath = tableView.indexPathForRow(at: point)
@@ -109,6 +108,23 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             postRef.updateData(["likes": updateValue])
         }
     }
+    
+    //セル内のコメントボタンがタップされた時に呼ばれるメソッド
+    @objc func commentButton(_ sender: UIButton, forEvent event: UIEvent){
+        print("DEBUG_PRINT: commentボタンがタップされました")
+        
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        let postData = postArray[indexPath!.row]
+        
+        let commentViewController = self.storyboard?.instantiateViewController(identifier: "Comment") as! CommentViewController
+        self.present(commentViewController, animated: true, completion: {
+            commentViewController.postData = postData
+        })
+    }
+    
+    
     /*
      // MARK: - Navigation
      

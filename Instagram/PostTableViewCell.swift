@@ -63,11 +63,8 @@ class PostTableViewCell: UITableViewCell {
         }
         
         //コメントの表示
-        if let comment = postData.comment {
-            self.commentLabel.text = "\(comment)"
-        } else {
-            self.commentLabel.text = ""
-            
-        }
+        let commentString = postData.comment.joined(separator: "\n")
+        self.commentLabel.text = "\(commentString)"
+        
     }
 }

@@ -10,12 +10,16 @@ import UIKit
 import Firebase
 import SVProgressHUD
 
-class CommentViewController: UIViewController {
+class CommentViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var commentCaptionLabel: UILabel!
+    @IBOutlet weak var commentTableView: UITableView!
+    @IBOutlet weak var commentTableViewCell: UITableView!
     @IBOutlet weak var commentTextField: UITextField!
     
+    
     var postData: PostData!
+    var postArray: [PostData] = []
     
     var listener: ListenerRegistration!
     
@@ -29,13 +33,18 @@ class CommentViewController: UIViewController {
         
         let postDic = [
             "comment": "\(commentName!) : \(self.commentTextField.text!)",
-            ] as [String: String]
+            ] as [String: Any]
         
-        PostRef.updateData(postDic, completion: nil)
+        
+        let comment = postDic["comment"]
+        let updateValue: FieldValue = FieldValue.arrayUnion([comment!])
+
+        PostRef.updateData(["comment":updateValue])
         
         SVProgressHUD.showSuccess(withStatus: "コメントを投稿しました")
         
         UIApplication.shared.windows.first{ $0.isKeyWindow }?.rootViewController?.dismiss(animated: true, completion: nil)
+        
     }
     
     @IBAction func commentCancelButton(_ sender: Any) {
@@ -44,17 +53,28 @@ class CommentViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        self.commentCaptionLabel!.text = "\(postData.name!) : \(postData.caption!)"
+        
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //self.commentCaptionLabel!.text = "\(postData.name!) : \(postData.caption!)"
-        //self.commentLabel!.text = "\(postData.commentName!) : \(postData.comment!)"
+        commentTableView.delegate = self
+        commentTableView.dataSource = self
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return postData.comment.count
         
     }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath )
+        cell.textLabel!.text = "\(postData.comment[indexPath.row])"
+        return cell
+    }
     
     /*
      // MARK: - Navigation

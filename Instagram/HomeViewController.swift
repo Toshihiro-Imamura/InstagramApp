@@ -119,9 +119,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let postData = postArray[indexPath!.row]
         
         let commentViewController = self.storyboard?.instantiateViewController(identifier: "Comment") as! CommentViewController
-        self.present(commentViewController, animated: true, completion: {
             commentViewController.postData = postData
-        })
+        self.present(commentViewController, animated: true, completion: nil)
     }
     
     

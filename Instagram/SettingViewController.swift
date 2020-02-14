@@ -47,6 +47,8 @@ class SettingViewController: UIViewController {
         
         let loginViewerController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
         self.present(loginViewerController!,animated: true, completion: nil)
+        
+        tabBarController?.selectedIndex = 0
     }
     
     override func viewDidAppear(_ animated: Bool) {
